@@ -8,10 +8,13 @@ public class PlayerMotion : MonoBehaviour
     private CharacterController controller;
     private float rotationAboutY = 0,rotationAboutX = 0;
     public GameObject camera; // publics must be initialized in Unity
+    private AudioSource stepSound;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        stepSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -37,11 +40,13 @@ public class PlayerMotion : MonoBehaviour
         motion = transform.TransformDirection(motion);// change to Global coordinates
         controller.Move(motion);//in Global coordinates
 
-        // simple motion
-//        transform.Translate(new Vector3(dx, dy, dz));
-        // simple motion forward
-        //      transform.Translate(new Vector3(0, 0, 0.1f));
-        // simple motion to the left
-        //      transform.Translate(new Vector3(-0.1f, 0, 0));
+        if(dx > 0.1 || dx < -0.1 || dz > 0.1 || dz < -0.1)
+        {
+            if(!stepSound.isPlaying)
+            {
+                stepSound.Play();
+            }
+        }
+
     }
 }

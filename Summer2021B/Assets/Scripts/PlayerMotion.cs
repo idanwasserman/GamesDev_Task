@@ -9,6 +9,7 @@ public class PlayerMotion : MonoBehaviour
     private float rotationAboutY = 0,rotationAboutX = 0;
     public GameObject camera; // publics must be initialized in Unity
     private AudioSource stepSound;
+    private float stepDiff = 0.025f;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +41,7 @@ public class PlayerMotion : MonoBehaviour
         motion = transform.TransformDirection(motion);// change to Global coordinates
         controller.Move(motion);//in Global coordinates
 
-        if(dx > 0.1 || dx < -0.1 || dz > 0.1 || dz < -0.1)
+        if(dx > stepDiff || dx < -stepDiff || dz > stepDiff || dz < -stepDiff)
         {
             if(!stepSound.isPlaying)
             {

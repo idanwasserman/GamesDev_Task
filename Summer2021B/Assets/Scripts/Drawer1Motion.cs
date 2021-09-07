@@ -19,11 +19,13 @@ public class Drawer1Motion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         RaycastHit hit;
-      
-        Physics.Raycast(camera.transform.position, camera.transform.forward, out hit);
-        if (hit.transform.gameObject != null && hit.distance < 5)
+
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit))
         {
+            if (hit.transform.gameObject != null && hit.distance < 5)
+            {
                 if (hit.transform.gameObject == this.gameObject)// we hve focused on THIS
                 {
                     crossHair.SetActive(false);
@@ -38,13 +40,14 @@ public class Drawer1Motion : MonoBehaviour
 
                         isOpen = !isOpen;
                     }
-                }
+                }    
             }
-       }
-      //  else
-       // {
-       //     crossHair.SetActive(true);
-       //     crossHairTouch.SetActive(false);
-       // }
+            else
+            {
+                crossHair.SetActive(true);
+                crossHairTouch.SetActive(false);
+            }
+        }
+    }
     
 }

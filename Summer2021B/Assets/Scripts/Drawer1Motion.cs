@@ -5,25 +5,25 @@ using UnityEngine;
 public class Drawer1Motion : MonoBehaviour
 {
 
-    private Animator animator;
+    public Animator animator;
+    private bool isOpen = false;
     // Start is called before the first frame update
     void Start()
     {
-        animator = GetComponent<Animator>();
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        animator.SetBool("Drawer1isOpen", true);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        animator.SetBool("Drawer1isOpen", false);
+       // animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            if(!isOpen)
+                animator.SetBool("Drawer1isOpen", true);
+            else
+                animator.SetBool("Drawer1isOpen", false);
+
+            isOpen = !isOpen;
+        }
     }
 }

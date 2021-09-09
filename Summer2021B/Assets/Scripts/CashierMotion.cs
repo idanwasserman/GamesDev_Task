@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class CashierMotion : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class CashierMotion : MonoBehaviour
     public GameObject thePlayer;
     private bool cashierTalked;
     private bool inTalkingArea;
+    public GameObject espressoCup;
 
     // Start is called before the first frame update
     void Start()
@@ -31,59 +33,28 @@ public class CashierMotion : MonoBehaviour
         {
             if (Physics.Raycast(ray, out hit, 100.0f))
             {
-                //if (hit.transform.gameObject.name == "Customer")
+                if (Input.GetKeyDown(KeyCode.T))
                 {
-                    if (Input.GetKeyDown(KeyCode.T))
-                    {
-                        StartCoroutine("CashierTalk");
+                    StartCoroutine("CashierTalk");
 
-                        frameText.text = "";
-                    }
-
+                    frameText.text = "";
                 }
             }
         }
-
-        // float playerYpos = thePlayer.transform.position.y;
-        //float npcYpos = this.transform.position.y;
-        //float diffYpos = playerYpos - npcYpos;
-
-        // check what object is in the camera's focus
-/*        if (!cashierTalked && Physics.Raycast(camera.transform.position, camera.transform.forward, out hit))
-        {
-            if (hit.transform.gameObject != null && hit.distance < 5)
-            {
-                if (this.transform.gameObject == hit.transform.gameObject)
-                {
-                    frameText.text = "Press [E] to talk...";
-                    
-                    if (Input.GetKeyDown(KeyCode.E))
-                    {
-                        StartCoroutine("CashierTalk");
-
-                        frameText.text = "";
-                    }
-                }
-                else
-                {
-                    *//*if (diffYpos > -1 && diffYpos < 1)
-                    {
-                        frameText.text = "";
-                    }*//*
-                }
-            }
-        }*/
     }
 
     IEnumerator CashierTalk()
     {
         animator.SetInteger("state", 2);
         cashierTalked = true;
+
         if(thePlayer.GetComponent<PlayerMotion>().coins <= 0)
+        {
             centerText.text = "Don't have money?\nI heard that the guy upstairs is giving money for riddle solvers";
+        }
         else
         {
-            centerText.text = "Here's your coffee.\nEnjoy!";
+            StartCoroutine("MakeCoffee");
             thePlayer.GetComponent<PlayerMotion>().coins--;
         }
 
@@ -92,6 +63,18 @@ public class CashierMotion : MonoBehaviour
         animator.SetInteger("state", 0);
         centerText.text = "";
         cashierTalked = false;
+    }
+
+    IEnumerator MakeCoffee()
+    {
+        centerText.text = "One espresso is on the way";
+        yield return new WaitForSeconds(7.5f);
+
+        centerText.text = "Here's your coffee.\nEnjoy!";
+        espressoCup.SetActive(true);
+
+        yield return new WaitForSeconds(5f);
+        centerText.text = "";
     }
 
     private void OnTriggerEnter(Collider other)

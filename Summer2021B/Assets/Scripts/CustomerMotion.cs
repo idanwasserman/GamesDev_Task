@@ -12,6 +12,8 @@ public class CustomerMotion : MonoBehaviour
     public GameObject thePlayer;
     private bool customerTalked = false;
     private bool talkedAlready = false;
+    public GameObject playersSponge;
+    private bool inTalkingArea = false;
 
     // Start is called before the first frame update
     void Start()
@@ -23,48 +25,39 @@ public class CustomerMotion : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
-        float playerYpos = thePlayer.transform.position.y;
-        float npcYpos = this.transform.position.y;
-        float diffYpos = playerYpos - npcYpos;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        // check what object is in the camera's focus
-        if (!customerTalked && Physics.Raycast(camera.transform.position, camera.transform.forward, out hit))
+        if (inTalkingArea)
         {
-            if (hit.transform.gameObject != null && hit.distance < 5)
+            if (Physics.Raycast(ray, out hit, 100.0f))
             {
-                if (this.transform.gameObject == hit.transform.gameObject)
+                //if (hit.transform.gameObject.name == "Customer")
                 {
-                    if(!talkedAlready)
-                    {
-                        frameText.text = "Press [E] to talk...";
-                    }
-                    else
-                    {
-                        frameText.text = "Press [R] to give object\nPress [E] to talk again";
-                    }
-
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         RotateCustomerToPlayer();
                         StartCoroutine("FirstCustomerTalk");
                         frameText.text = "";
                     }
-                    else if(Input.GetKeyDown(KeyCode.R))
+                    else if (Input.GetKeyDown(KeyCode.R))
                     {
-                        // give object
-                    }
-                }
-                else 
-                {
-                    if (diffYpos > -1 && diffYpos < 1)
-                    {
-                        frameText.text = "";
+                        if (playersSponge.activeInHierarchy)
+                        {
+                            playersSponge.SetActive(false);
+                            centerText.text = "SPONGE is the right answer!\nHere's your money as promised.";
+                            thePlayer.GetComponent<PlayerMotion>().coins++;
+                        }
+                        else
+                        {
+                            centerText.text = "You've got nothing";
+                        }
                     }
                 }
             }
         }
-    }
 
+    }
+    
     IEnumerator FirstCustomerTalk()
     {
         animator.SetInteger("state", 1);
@@ -74,7 +67,7 @@ public class CustomerMotion : MonoBehaviour
         yield return new WaitForSeconds(8f);
 
         animator.SetInteger("state", 0);
-        centerText.text = "There are some objects\nin the XXX if you need a hint.";
+        centerText.text = "There are some objects hidden inside\nif you need a hint.";
 
         yield return new WaitForSeconds(8f);
 
@@ -93,5 +86,32 @@ public class CustomerMotion : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(delta);
         this.gameObject.transform.rotation = rotation;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name != "Player")
+            return;
+
+        if (!talkedAlready)
+        {
+            frameText.text = "Press [E] to talk...";
+        }
+        else
+        {
+            frameText.text = "Press [R] to give object\nPress [E] to talk again";
+        }
+
+        inTalkingArea = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.name != "Player")
+            return;
+
+        frameText.text = "";
+        inTalkingArea = false;
+    }
+
 }
 

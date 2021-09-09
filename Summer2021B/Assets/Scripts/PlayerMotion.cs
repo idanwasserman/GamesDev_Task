@@ -10,12 +10,14 @@ public class PlayerMotion : MonoBehaviour
     public GameObject camera; // publics must be initialized in Unity
     private AudioSource stepSound;
     private float stepDiff = 0.025f;
+    public int coins;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
         stepSound = GetComponent<AudioSource>();
+        coins = 0;
     }
 
     // Update is called once per frame

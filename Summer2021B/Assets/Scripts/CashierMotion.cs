@@ -14,6 +14,7 @@ public class CashierMotion : MonoBehaviour
     private bool cashierTalked;
     private bool inTalkingArea;
     public GameObject espressoCup;
+    private AudioSource coffeeSound;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class CashierMotion : MonoBehaviour
         animator = GetComponent<Animator>();
         inTalkingArea = false;
         cashierTalked = false;
+        coffeeSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -68,7 +70,8 @@ public class CashierMotion : MonoBehaviour
     IEnumerator MakeCoffee()
     {
         centerText.text = "One espresso is on the way";
-        yield return new WaitForSeconds(7.5f);
+        coffeeSound.Play();
+        yield return new WaitForSeconds(8f);
 
         centerText.text = "Here's your coffee.\nEnjoy!";
         espressoCup.SetActive(true);

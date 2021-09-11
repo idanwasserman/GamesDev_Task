@@ -14,11 +14,13 @@ public class CustomerMotion : MonoBehaviour
     private bool talkedAlready = false;
     public GameObject playersSponge;
     private bool inTalkingArea = false;
+    private AudioSource giveMoneySound;
 
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
+        giveMoneySound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -33,6 +35,7 @@ public class CustomerMotion : MonoBehaviour
             {
                 //if (hit.transform.gameObject.name == "Customer")
                 {
+                    
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         RotateCustomerToPlayer();
@@ -45,6 +48,7 @@ public class CustomerMotion : MonoBehaviour
                         {
                             playersSponge.SetActive(false);
                             centerText.text = "SPONGE is the right answer!\nHere's your money as promised.";
+                            giveMoneySound.Play();
                             thePlayer.GetComponent<PlayerMotion>().coins++;
                         }
                         else

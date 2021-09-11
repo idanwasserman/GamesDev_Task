@@ -13,11 +13,12 @@ public class ChestController : MonoBehaviour
     public Animator animator;
     public GameObject sponge;
     public GameObject playersSponge;
+    private AudioSource drawerSound;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        drawerSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -29,6 +30,7 @@ public class ChestController : MonoBehaviour
             {
                 isDrawer1Open = !isDrawer1Open;
                 animator.SetBool("Drawer1isOpen", isDrawer1Open);
+                drawerSound.Play();
             }
         }
 
